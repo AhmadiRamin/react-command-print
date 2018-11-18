@@ -7,7 +7,7 @@ import {
   IListViewCommandSetExecuteEventParameters
 } from '@microsoft/sp-listview-extensibility';
 import { Dialog } from '@microsoft/sp-dialog';
-
+import PrintDialogContent from './components/print-dialog';
 import * as strings from 'PrintCommandSetStrings';
 
 /**
@@ -17,13 +17,14 @@ import * as strings from 'PrintCommandSetStrings';
  */
 export interface IPrintCommandSetProperties {
   // This is an example; replace with your own properties
-  sampleTextOne: string;
-  sampleTextTwo: string;
+  printText: string;
 }
 
 const LOG_SOURCE: string = 'PrintCommandSet';
 
 export default class PrintCommandSet extends BaseListViewCommandSet<IPrintCommandSetProperties> {
+
+  private _colorCode: string;
 
   @override
   public onInit(): Promise<void> {
@@ -33,21 +34,19 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
 
   @override
   public onListViewUpdated(event: IListViewCommandSetListViewUpdatedParameters): void {
-    const compareOneCommand: Command = this.tryGetCommand('COMMAND_1');
-    if (compareOneCommand) {
+    const printCommand: Command = this.tryGetCommand('COMMAND_Print');
+    if (printCommand) {
       // This command should be hidden unless exactly one row is selected.
-      compareOneCommand.visible = event.selectedRows.length === 1;
+      printCommand.visible = event.selectedRows.length === 1;
     }
   }
 
   @override
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
-      case 'COMMAND_1':
-        Dialog.alert(`${this.properties.sampleTextOne}`);
-        break;
-      case 'COMMAND_2':
-        Dialog.alert(`${this.properties.sampleTextTwo}`);
+      case 'COMMAND_Print':
+      const dialog: PrintDialogContent = new PrintDialogContent();
+      dialog.show();
         break;
       default:
         throw new Error('Unknown command');

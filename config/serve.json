@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://raminahmadi.sharepoint.com/sites/test/Lists/Test/AllItems.aspx",
       "customActions": {
         "83a96197-2c0f-4966-8532-de37b0624ef0": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
@@ -16,7 +16,7 @@
       }
     },
     "print": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://raminahmadi.sharepoint.com/sites/test/Lists/Test/AllItems.aspx",
       "customActions": {
         "83a96197-2c0f-4966-8532-de37b0624ef0": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",

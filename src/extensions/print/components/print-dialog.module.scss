@@ -1,0 +1,16 @@
+.PrintDialogContent { 
+    padding: 1px;
+    width: 900px;
+
+    .clear {
+        clear: both;
+    }
+
+    .printIcons{
+        text-align: right;
+    }
+    .templateText{
+        float: left;
+        padding: 5px;
+    }
+}

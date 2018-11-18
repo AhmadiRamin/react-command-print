@@ -1,6 +1,5 @@
 declare interface IPrintCommandSetStrings {
-  Command1: string;
-  Command2: string;
+  PrintCommand: string;
 }
 
 declare module 'PrintCommandSetStrings' {
