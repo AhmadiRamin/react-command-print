@@ -6,9 +6,9 @@ import {
   IListViewCommandSetListViewUpdatedParameters,
   IListViewCommandSetExecuteEventParameters
 } from '@microsoft/sp-listview-extensibility';
-import { Dialog } from '@microsoft/sp-dialog';
-import PrintDialogContent from './components/print-dialog';
-import * as strings from 'PrintCommandSetStrings';
+import {
+  sp,
+} from "@pnp/sp";
 
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
@@ -23,13 +23,15 @@ export interface IPrintCommandSetProperties {
 const LOG_SOURCE: string = 'PrintCommandSet';
 
 export default class PrintCommandSet extends BaseListViewCommandSet<IPrintCommandSetProperties> {
-
-  private _colorCode: string;
-
   @override
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized PrintCommandSet');
-    return Promise.resolve();
+    
+    return super.onInit().then(_ => {
+      sp.setup({
+        spfxContext: this.context
+      });
+    });
   }
 
   @override
@@ -42,11 +44,18 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
   }
 
   @override
-  public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
+  public async onExecute(event: IListViewCommandSetExecuteEventParameters): Promise<void> {
     switch (event.itemId) {
       case 'COMMAND_Print':
-      const dialog: PrintDialogContent = new PrintDialogContent();
-      dialog.show();
+      const component = await import(
+        /* webpackMode: "lazy" */
+        /* webpackChunkName: 'multisharedialog-component' */
+        './components/print-dialog'
+      );
+        const dialog = new component.PrintDialog();
+        dialog.httpClient = this.context.spHttpClient;
+        dialog.webUrl = this.context.pageContext.web.absoluteUrl;
+        dialog.show();
         break;
       default:
         throw new Error('Unknown command');
