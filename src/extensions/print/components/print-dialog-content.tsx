@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { initializeIcons } from '@uifabric/icons';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import styles from './print-dialog.module.scss';
@@ -8,29 +7,36 @@ import {
     DialogContent
 } from 'office-ui-fabric-react';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
-import {
-    SPHttpClient,
-    SPHttpClientResponse
-} from '@microsoft/sp-http';
-import {
-    sp,
-    ListEnsureResult
-} from "@pnp/sp";
-
 import IPrintDialogContentProps from './IPrintDialogContentProps';
 import IPrintDialogContentState from './IPrintDialogContentState';
+import ListHelper from '../util/list-helper';
 
 export default class PrintDialogContent extends React.Component<IPrintDialogContentProps, IPrintDialogContentState> {
     constructor(props) {
         super(props);
-        initializeIcons();
+        
         this.state = {
             loading: true,
             loadingMessage: "Loading...",
             printTemplates: []
         };
-        // Getting configuration
-        this.initializeSettings();
+
+        // Initialize icons
+        initializeIcons();
+
+        // Validate and create Print Settings list
+        const listHelper = new ListHelper(this.props.webUrl);
+        listHelper.ValidatePrintSettingsList().then(_ => {
+            this.setState({
+                loadingMessage: 'Initializing settings',
+                loading:true
+            });
+        }).catch(e => {
+            console.log("Print Settings list already exist!");
+            this.setState({
+                loading:false
+            });
+        });
     }
 
     public render(): JSX.Element {
@@ -49,9 +55,8 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                             :
                             <div className="ms-Grid-row">
                                 <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg8">
-                                    <span className={styles.templateText}>Template:</span>
                                     <Dropdown
-                                        placeHolder="Select..."
+                                        placeHolder="Select your template..."
                                         options={[
                                             { key: 'A', text: 'Template 1' },
                                             { key: 'B', text: 'Template 2' },
@@ -71,25 +76,5 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                 </div>
             </DialogContent>;
         </div>;
-    }
-
-    public initializeSettings() {        
-        // Check if Print Settings list exists, otherwise we are going to create it
-        this.props.httpClient.get(this.props.webUrl + `/_api/web/lists/GetByTitle('Print Settings')/items`, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                if (response.ok) {
-                    // Perfect! Print Settings list exists
-                }
-                else {
-                    // We need to add the Print Settings list
-                    sp.web.lists.add('Print Settings', 'List of templates for Print Command Set extension', 100).then(result => {                        
-                        //result.list.fields.addText('ListID');
-                        //result.list.fields.addMultilineText('Header');
-                        result.list.fields.createFieldAsXml('<Field Type="Note" DisplayName="Header" Required="FALSE" EnforceUniqueValues="FALSE" Indexed="FALSE" NumLines="6" RichText="FALSE" RichTextMode="Compatible" IsolateStyles="FALSE" Sortable="FALSE" ID="{6e971d30-8d31-4333-8735-b2c455432e03}" SourceID="{4f07c112-1d4c-4133-8539-9732fe069a9f}" StaticName="Header" Name="Header" CustomFormatter="" RestrictedMode="TRUE" AppendOnly="FALSE" UnlimitedLengthInDocumentLibrary="FALSE"></Field>')
-                    });
-                }
-            }).catch(e => {
-                console.log('error messsage');
-            });
     }
 }

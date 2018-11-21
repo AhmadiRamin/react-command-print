@@ -7,9 +7,8 @@ import {
   IListViewCommandSetExecuteEventParameters
 } from '@microsoft/sp-listview-extensibility';
 import {
-  sp,
+  sp
 } from "@pnp/sp";
-
 /**
  * If your command set uses the ClientSideComponentProperties JSON input,
  * it will be deserialized into the BaseExtension.properties object.
@@ -52,8 +51,8 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
         /* webpackChunkName: 'multisharedialog-component' */
         './components/print-dialog'
       );
+        console.log(this.context.pageContext.list.id);
         const dialog = new component.PrintDialog();
-        dialog.httpClient = this.context.spHttpClient;
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
         dialog.show();
         break;
