@@ -1,6 +1,6 @@
 .PrintDialogContent { 
     padding: 1px;
-    width: 900px;
+    width: 600px;
 
     .clear {
         clear: both;
@@ -9,11 +9,8 @@
     .printIcons{
         text-align: right;
     }
-    .templateText{
-        float: left;
-        padding: 5px;
-    }
-    .templateDropDown{
-        float:left;
+    .detailsListMargin{
+        margin-top: 10px;
+        border: 1px solid #eeeeee;
     }
 }

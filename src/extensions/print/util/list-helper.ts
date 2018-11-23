@@ -1,5 +1,4 @@
 import {
-    sp,
     ListAddResult,
     Web
 } from "@pnp/sp";

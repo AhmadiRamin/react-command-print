@@ -51,9 +51,9 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
         /* webpackChunkName: 'multisharedialog-component' */
         './components/print-dialog'
       );
-        console.log(this.context.pageContext.list.id);
         const dialog = new component.PrintDialog();
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
+        dialog.listId = this.context.pageContext.list.id.toString();
         dialog.show();
         break;
       default:
