@@ -3,4 +3,5 @@ export default interface IPrintDialogContentState {
     loadingMessage: string;
     printTemplates: Array<string>;
     items:any[];
+    showPanel:boolean;
 }

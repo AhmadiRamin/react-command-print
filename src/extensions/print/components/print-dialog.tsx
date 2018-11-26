@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BaseDialog } from '@microsoft/sp-dialog';
-import PrintDialogContent from './print-dialog-content';
+import PrintDialogContent from './print-dialog-content/print-dialog-content';
 
 class PrintDialog extends BaseDialog {    
     public webUrl: string;

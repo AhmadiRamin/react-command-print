@@ -20,7 +20,8 @@
     "@pnp/odata": "^1.2.6",
     "@pnp/sp": "^1.2.6",
     "@types/es6-promise": "0.0.33",
-    "@types/webpack-env": "1.13.1"
+    "@types/webpack-env": "1.13.1",
+    "react-quill": "^1.4.0-beta.5"
   },
   "devDependencies": {
     "@microsoft/sp-build-web": "1.7.0",

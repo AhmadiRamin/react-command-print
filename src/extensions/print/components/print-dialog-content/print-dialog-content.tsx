@@ -7,10 +7,12 @@ import {
     DialogContent
 } from 'office-ui-fabric-react';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
-import IPrintDialogContentProps from './IPrintDialogContentProps';
-import IPrintDialogContentState from './IPrintDialogContentState';
-import PrintTemplateContent from './print-dialog-template-content/print-template-content';
-import ListHelper from '../util/list-helper';
+import IPrintDialogContentProps from './print-dialog-content-props';
+import IPrintDialogContentState from './print-dialog-content-state';
+import PrintTemplateContent from '../print-dialog-template-content/print-template-content';
+import SettingsPanel from '../settings-panel/settings-panel';
+
+import ListHelper from '../../util/list-helper';
 import {
     Dropdown
 } from 'office-ui-fabric-react';
@@ -36,6 +38,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
             loadingMessage: "Loading...",
             printTemplates: [],
             items: _items,
+            showPanel:false
         };
 
         // Initialize icons
@@ -43,7 +46,6 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
 
         // Validate and create Print Settings list
         this.initializeSettings();
-        this.onPrintButtonClick = this.onPrintButtonClick.bind(this);
     }
 
     public render(): JSX.Element {
@@ -80,20 +82,24 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                                     <IconButton iconProps={{ iconName: 'Mail' }} title="Mail" ariaLabel="Mail" />
                                     <IconButton iconProps={{ iconName: 'PDF' }} title="PDF" ariaLabel="PDF" />
                                     <IconButton iconProps={{ iconName: 'ExcelLogo' }} title="Export to excel" ariaLabel="ExcelLogo" />
-                                    <IconButton iconProps={{ iconName: 'Settings' }} title="Settings" ariaLabel="Settings" />
+                                    <IconButton iconProps={{ iconName: 'Settings' }} title="Settings" ariaLabel="Settings" onClick={this._setShowPanel(true)} />
                                 </div>
                             </div>
                             <div className={`${styles.detailsListMargin} ms-grid-row`}>
-                                <PrintTemplateContent items={this.state.items} ref={el => (this.componentRef = el)}/>
+                                <PrintTemplateContent items={this.state.items} ref={el => (this.componentRef = el)} />
                             </div>
                         </div>
+                        
                 }
+                <SettingsPanel showPanel={this.state.showPanel} setShowPanel={this._setShowPanel} listId={this.props.listId}/>
             </DialogContent>
         </div>;
     }
 
-    private onPrintButtonClick() {
-        window.print();
+    public _setShowPanel = (showPanel: boolean): (() => void) => {
+        return (): void => {
+            this.setState({ showPanel });
+        };
     }
 
     private initializeSettings() {
