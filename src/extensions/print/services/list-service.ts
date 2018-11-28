@@ -38,20 +38,21 @@ export default class ListService {
      * GetFieldsByListId
      */
     public async GetFieldsByListId(listId: string): Promise<Array<IListField>> {
-        return sp.web.lists.getById(listId).fields.select('Title', 'InternalName', 'TypeAsString', 'IsDependentLookup').get().then((results: IListField[]) => {
+        return sp.web.lists.getById(listId).fields.select('Id','Title', 'InternalName', 'TypeAsString', 'IsDependentLookup').get().then((results: IListField[]) => {
             //Setup the list fields
             this._listFields = new Array<IListField>();
             // This includes any field of a type we don't want (such as computed)
             // This also includes several internal fields that won't make sense to clone (such as the creation date)
             // Finally, no dependent lookup columns (projected fields)
             for (let field of results) {
-                const {InternalName,TypeAsString,Title,IsDependentLookup} = field;
+                const {InternalName,TypeAsString,Title,IsDependentLookup,Id} = field;
                 if (this._fieldTypesToIgnore.indexOf(TypeAsString) == -1 && this._fieldsToIgnore.indexOf(InternalName) == -1 && !IsDependentLookup) {
 
                     this._listFields.push({
                         InternalName,
                         TypeAsString,
-                        Title:Title
+                        Title:Title,
+                        Id:Id
                     });
 
                 }

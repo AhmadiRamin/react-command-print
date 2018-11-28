@@ -54,7 +54,7 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
         const dialog = new component.PrintDialog();
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
         dialog.listId = this.context.pageContext.list.id.toString();
-        dialog.show();
+        dialog.show();        
         break;
       default:
         throw new Error('Unknown command');

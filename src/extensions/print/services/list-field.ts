@@ -2,6 +2,7 @@
 export default interface IListField {
 	InternalName: string;
 	Title:string;
+	Id:string;
 	TypeAsString: string;
 	IsDependentLookup?: boolean;
 }
