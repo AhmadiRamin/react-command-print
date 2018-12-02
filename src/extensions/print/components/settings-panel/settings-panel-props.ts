@@ -1,5 +1,11 @@
+import ITemplateItem from "../../services/template-item";
+
 export default interface ISettingsPanelProps{
     showPanel:boolean;
     listId:string;
-    setShowPanel: (showPanel: boolean)=> () => void ;
+    templates: any[];
+    setShowPanel: (showPanel: boolean)=> () => void;
+    onTemplateAdded: (template: ITemplateItem)=>void;
+    onTemplateRemoved: (id: number, template:ITemplateItem)=>void;
+    onTemplateUpdated: (index:number, template:ITemplateItem)=>void;
 }

@@ -6,11 +6,13 @@ import PrintDialogContent from './print-dialog-content/print-dialog-content';
 class PrintDialog extends BaseDialog {    
     public webUrl: string;
     public listId: string;
+    public itemId: number;
     public render(): void {        
         ReactDOM.render(<PrintDialogContent
             close={this.close}
             webUrl={this.webUrl}
             listId={this.listId}
+            itemId={this.itemId}
         />, this.domElement);
     }
 }

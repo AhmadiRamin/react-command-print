@@ -1,3 +1,6 @@
+import IPrintTemplate from "../print-dialog-content/print-template";
+
 export default interface IPrintTemplateProps {
-    items: any[];
+    template: IPrintTemplate;
+    itemId: number;
 }

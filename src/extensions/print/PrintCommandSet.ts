@@ -54,6 +54,7 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
         const dialog = new component.PrintDialog();
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
         dialog.listId = this.context.pageContext.list.id.toString();
+        dialog.itemId = event.selectedRows[0].getValueByName('ID');
         dialog.show();        
         break;
       default:

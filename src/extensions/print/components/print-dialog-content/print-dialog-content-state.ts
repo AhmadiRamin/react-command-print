@@ -1,7 +1,13 @@
+import IPrintTemplate from "./print-template";
+
 export default interface IPrintDialogContentState {
-    loading: boolean;
+    hideLoading: boolean;
     loadingMessage: string;
-    printTemplates: Array<string>;
+    templates: any[];
     items:any[];
     showPanel:boolean;
+    hideTemplateLoading:boolean;
+    printTemplate: IPrintTemplate;
+    itemContent:any;
+    selectedTemplateIndex:number;
 }

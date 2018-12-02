@@ -53,6 +53,7 @@ define([], function() {
     fieldSMLastModifiedDate: "SMLastModifiedDate",
     fieldSMTotalFileStreamSize: "SMTotalFileStreamSize",
     fieldSMTotalFileCount: "SMTotalFileCount",
-    fieldFolderChildCount: "FolderChildCount"
+    fieldFolderChildCount: "FolderChildCount",
+    fieldOrder: "Order"
   }
 });

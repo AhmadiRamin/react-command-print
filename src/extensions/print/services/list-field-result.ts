@@ -1,7 +1,6 @@
 /** Describes the bare minimum information we need about a list field */
-export default interface IListField {
+export interface IListFieldResult {
 	InternalName: string;
-	Title:string;
-	Type:string;
-	Id:string;
+	TypeAsString: string;
+	IsDependentLookup?: boolean;
 }

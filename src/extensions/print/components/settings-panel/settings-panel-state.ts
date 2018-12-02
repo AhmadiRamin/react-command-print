@@ -1,4 +1,9 @@
+import ITemplateItem from "../../services/template-item";
+
 export default interface ISettingsPanelState{
-    templates: any[];
+    activeTemplate: ITemplateItem;
+    activateTemplateIndex: number;
+    activateTemplateId: number;
     showTemplatePanel:boolean;
+    showDeleteDialog:boolean;
 }

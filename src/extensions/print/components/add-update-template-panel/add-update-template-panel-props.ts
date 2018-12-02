@@ -1,7 +1,10 @@
+import ITemplateItem from "../../services/template-item";
 
 export default interface AddUpdateTemplatePanelProps{
     showTemplatePanel:boolean;
     listId:string;
-    itemId?:number;
-    setShowTemplatePanel: (showPanel: boolean)=> () => void ;
+    template:ITemplateItem;
+    onTemplateChanged : (t : ITemplateItem)=>void;
+    onTemplateSaved : ()=>void;
+    setShowTemplatePanel: (showPanel: boolean, template?:any)=> () => void ;
 }

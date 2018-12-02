@@ -22,7 +22,7 @@ export default class ListHelper {
                 "ListTemplate": "100",
                 "Fields": [
                     "<Field DisplayName='ListId' Type='Text' Required='FALSE' StaticName='ListId' Name='ListId' />",
-                    "<Field DisplayName='Header' Type='Note' Required='FALSE' StaticName='Header' Name='Header' RichText='FALSE' RichTextMode='Compatible' />",
+                    "<Field DisplayName='Header' Type='Note' Required='FALSE' StaticName='Header' Name='Header' NumLines='6' IsolateStyles='FALSE' RestrictedMode='TRUE' AppendOnly='FALSE' UnlimitedLengthInDocumentLibrary='FALSE' RichText='FALSE' RichTextMode='Compatible' />",
                     "<Field DisplayName='Footer' Type='Note' Required='FALSE' StaticName='Footer' Name='Footer' RichText='FALSE' RichTextMode='Compatible' />",
                     "<Field DisplayName='Columns' Type='Note' Required='FALSE' StaticName='Columns' Name='Columns' RichText='FALSE' RichTextMode='Compatible' />"
                 ],
@@ -41,7 +41,7 @@ export default class ListHelper {
         const spWeb = new Web(this.webUrl);
         const spListTitle = element["ListName"];
         const spListTemplate = element["ListTemplate"];
-        const fieldsToCreate: string[] = element["FieldTexts"];
+        const fieldsToCreate: string[] = element["Fields"];
 
         return spWeb.lists.add(spListTitle, "", spListTemplate, false).then(({ list }: ListAddResult) => {
 
@@ -50,7 +50,8 @@ export default class ListHelper {
 
             for (let i = 0; i < fieldsToCreate.length; i++) {
                 // add each addText call to the batch
-                list.fields.inBatch(batch).addText(fieldsToCreate[i]);
+                //list.fields.inBatch(batch).addText(fieldsToCreate[i]);
+                list.fields.inBatch(batch).createFieldAsXml(fieldsToCreate[i]);
             }
 
             // execute the batch

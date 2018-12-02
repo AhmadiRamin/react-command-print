@@ -1,7 +1,5 @@
 import { IColumn } from 'office-ui-fabric-react/lib/DetailsList';
-import ITemplate from './template';
 export default interface AddUpdateTemplatePanelState{
-    items:any[];
     helperItems:any[];
     fields:any[];
     selectionDetails?: string;
@@ -9,7 +7,10 @@ export default interface AddUpdateTemplatePanelState{
     itemColumns:IColumn[];
     isColumnReorderEnabled: boolean;
     frozenColumnCountFromStart: string;
-    frozenColumnCountFromEnd: string;
-    template: ITemplate;
+    frozenColumnCountFromEnd: string;    
+    templateColumns:any[];
+    listId:string;
     section: string;
+    showColorPicker: boolean;
+    color:string;
 }

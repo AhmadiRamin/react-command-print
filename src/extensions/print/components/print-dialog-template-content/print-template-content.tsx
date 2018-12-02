@@ -1,46 +1,42 @@
 import * as React from 'react';
-import { DetailsList, DetailsListLayoutMode, IColumn, CheckboxVisibility } from 'office-ui-fabric-react/lib/DetailsList';
-import IPrintTemplateProps from './print-template-props';
-const _columns: IColumn[] = [
-    {
-        key: 'column1',
-        name: 'Name',
-        fieldName: 'name',
-        minWidth: 100,
-        maxWidth: 200,
-        isResizable: true,
-        ariaLabel: 'Operations for name'
-    },
-    {
-        key: 'column2',
-        name: 'Value',
-        fieldName: 'value',
-        minWidth: 100,
-        maxWidth: 200,
-        isResizable: true,
-        ariaLabel: 'Operations for value'
-    }
-];
-class PrintTemplateContent extends React.Component<IPrintTemplateProps,{}>{
 
-    constructor(props){
+import ReactHtmlParser from 'react-html-parser';
+import styles from './print-template-content.module.scss';
+import IPrintTemplateProps from './print-template-props';
+import PrintTemplateContentState from './print-template-content-state';
+
+
+class PrintTemplateContent extends React.Component<IPrintTemplateProps, PrintTemplateContentState>{
+
+    constructor(props) {
         super(props);
+        this.state = {
+            content: []
+        };
     }
-    public render(){
+    public render() {
         return (
-            <DetailsList
-                items={this.props.items}
-                columns={_columns}
-                isHeaderVisible={false}
-                setKey="set"
-                layoutMode={DetailsListLayoutMode.fixedColumns}
-                checkboxVisibility={CheckboxVisibility.hidden}
-                selectionPreservedOnEmptyClick={true}
-                ariaLabelForSelectionColumn="Toggle selection"
-                ariaLabelForSelectAllCheckbox="Toggle selection for all items"
-            />
+            <div className={styles.Print}>
+                {this.props.template &&
+                    <div className={styles.Print}>
+                        <div className={styles.printHeader}>
+                            {ReactHtmlParser(this.props.template.header)}
+                        </div>
+                        <div className={styles.printContent}>
+                            {
+                                this.props.template.content
+                            }
+                        </div>
+                        <div className={styles.printFooter}>
+                            {ReactHtmlParser(this.props.template.footer)}
+                        </div>
+
+                    </div>
+                }
+            </div>
         );
     }
+
 }
 
 export default PrintTemplateContent;

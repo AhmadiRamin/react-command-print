@@ -9,9 +9,42 @@
     .printIcons{
         text-align: right;
     }
-    .detailsListMargin{
+
+    .templateContent{
         margin-top: 10px;
         border: 1px solid #eeeeee;
-        
+    }
+    .loadingMargin{
+        margin-top: 10px;
+    }
+    .templateSection{
+        margin: 5px;
+        background-color: #D3D3D1;
+        height: 35px;
+    }
+    .templateSection span{        
+        padding: 8px;
+        display: block;
+    }
+    .templateTable{
+        margin: 5px;
+        border: 1px #eeeeee solid; 
+        overflow-x:hidden;
+    }
+}
+@media print{
+    .templateTable{
+        margin: 5px;
+        border: 1px #eeeeee solid; 
+        overflow-x:hidden;
+    }
+    .templateSection{
+        margin: 5px;
+        background-color: #D3D3D1;
+        height: 35px;
+    }
+    .templateSection span{        
+        padding: 5px;
+        display: block;
     }
 }

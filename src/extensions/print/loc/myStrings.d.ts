@@ -54,6 +54,7 @@ declare interface IPrintCommandSetStrings {
   fieldSMTotalFileStreamSize: string;
   fieldSMTotalFileCount: string;
   fieldFolderChildCount: string;
+  fieldOrder:string;
 }
 
 declare module 'PrintCommandSetStrings' {
