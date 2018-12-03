@@ -19,7 +19,6 @@ export default class ListService {
                 //Get the item values
                 sp.web.lists.getById(listId).items.getById(itemId).fieldValuesAsText.get()
                     .then((result: any) => {
-
                         resolve(result);
                     })
                     .catch((error: any): void => {
@@ -45,7 +44,7 @@ export default class ListService {
      * GetFieldsByListId
      */
     public async GetFieldsbyListId(listId: string): Promise<Array<IListField>> {
-        return sp.web.lists.getById(listId).fields.select('Id', 'Title', 'InternalName','TypeAsString','IsDependentLookup').get().then((results: any) => {
+        return sp.web.lists.getById(listId).fields.select('Id', 'Title', 'InternalName','TypeAsString','IsDependentLookup','StaticName').get().then((results: any) => {
             //Setup the list fields
             const _listFields = new Array<IListField>();
             // This includes any field of a type we don't want (such as computed)
@@ -54,9 +53,8 @@ export default class ListService {
             for (let field of results) {
                 const { InternalName, TypeAsString, Title, IsDependentLookup, Id } = field;
                 if (this._fieldTypesToIgnore.indexOf(TypeAsString) == -1 && this._fieldsToIgnore.indexOf(InternalName) == -1 && !IsDependentLookup) {
-
                     _listFields.push({
-                        InternalName,
+                        InternalName: InternalName.replace(/_/g, '_x005f_').replace(' ', ''),
                         Title: Title,
                         Id: Id,
                         Type: 'Field'
@@ -79,7 +77,7 @@ export default class ListService {
     }
 
     public async UpdateTemplate(id: number, template: any): Promise<boolean> {
-        console.log(template);
+       
         return sp.web.lists.getByTitle('PrintSettings').items.getById(id).update(template).then(e => true).catch(error => {
             Log.error(LOG_SOURCE, error);
             return error.message;

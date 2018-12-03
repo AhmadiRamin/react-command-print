@@ -168,6 +168,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
         if (columns.length > 0) {
             for (var i = 0; i < columns.length; i++) {
                 const item = columns[i];
+                console.log(item);
                 if (item.Type === "Section") {
                     if (table.length > 0) {
                         content.push(

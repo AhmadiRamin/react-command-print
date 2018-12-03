@@ -103,6 +103,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
     public async componentDidMount() {
         let fields: any[] = await this.listService.GetFieldsbyListId(this.props.listId);
+        console.log(fields);
         this.setState({
             fields
         });
