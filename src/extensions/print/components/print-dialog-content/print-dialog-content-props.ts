@@ -3,4 +3,5 @@ export default interface IPrintDialogContentProps {
     webUrl: string;
     listId: string;
     itemId: number;
+    title: string;
 }

@@ -17,6 +17,7 @@ import ListService from '../../services/list-service';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import { ColorPicker } from 'office-ui-fabric-react/lib/ColorPicker';
+import { Icon } from 'office-ui-fabric-react/lib/Icon';
 let _draggedItem: any = null;
 let _draggedIndex = -1;
 
@@ -53,8 +54,9 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
     constructor(props) {
         super(props);
-        this.props.setShowTemplatePanel(this._onClosePanel.bind(this));
+        
         this.listService = new ListService();
+        this._defaultColor = '#eeeeee';
         this._defautState = {
             helperItems: [{
                 Title: 'Drag your fields here'
@@ -68,13 +70,13 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             frozenColumnCountFromStart: '1',
             frozenColumnCountFromEnd: '0',
             showColorPicker: false,
-            color: '#eeeeee'
+            color: this._defaultColor
         };
         this.state = {
             ...this._defautState,
             fields: []
         };
-        this._defaultColor = '#eeeeee';
+        
         this._fieldSelection = new Selection();
         this._itemSelection = new Selection();
         this._renderItemColumn = this._renderItemColumn.bind(this);
@@ -83,6 +85,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
         this._onColorChange=this._onColorChange.bind(this);
         this._onColorSelected=this._onColorSelected.bind(this);
         this._openColorPicker=this._openColorPicker.bind(this);
+        this.props.setShowTemplatePanel(this._onClosePanel.bind(this));
     }
 
     public async componentDidMount() {
@@ -170,7 +173,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
                             </div>
                             <div className="ms-Grid-col ms-sm1 ms-md2 ms-lg2">
-                                <IconButton iconProps={{ iconName: 'Color' }} title="Change color" ariaLabel="Change Color" onClick={this._openColorPicker} />
+                                <IconButton iconProps={{ iconName: 'Color' }} title="Change color" style={{color: this.state.color}} ariaLabel="Change Color" onClick={this._openColorPicker} />                                
                                 <IconButton iconProps={{ iconName: 'Accept' }} title="Accept" ariaLabel="Accept" onClick={this._addSection} />
                             </div>
                         </div>
@@ -234,7 +237,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
     private _onColorSelected() {
         this.setState({
             showColorPicker: false,
-            color: this._defaultColor
+            color: this._defaultColor            
         });
     }
 
@@ -273,7 +276,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
     private _renderRow = (props: IDetailsRowProps, defaultRender?: any) => {
 
         if (props.item.Type === 'Section')
-            return <DetailsRow {...props} className={styles.sectionRow} />;
+            return <DetailsRow {...props} className={styles.sectionRow}/>;
         else
             return <DetailsRow {...props} />;
     }

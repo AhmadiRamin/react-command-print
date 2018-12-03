@@ -86,7 +86,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
         const templates = this.state.templates;
         return <div className={styles.PrintDialogContent}>
             <DialogContent
-                title='Print List Item'
+                title={`Print ${this.props.title}`}
                 onDismiss={this.props.close}
                 showCloseButton={true}
             >

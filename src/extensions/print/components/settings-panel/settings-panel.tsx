@@ -72,8 +72,7 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
                         listId={this.props.listId}
                         showTemplatePanel={this.state.showTemplatePanel}
                         setShowTemplatePanel={this._setShowTemplatePanel} />
-                </Panel>
-                <Dialog
+                    <Dialog
                     hidden={this.state.showDeleteDialog}
                     onDismiss={this._closeDeleteDialog}
                     dialogContentProps={{
@@ -94,6 +93,7 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
                         <DefaultButton onClick={this._closeDeleteDialog} text="Cancel" />
                     </DialogFooter>
                 </Dialog>
+                </Panel>                
             </div>
         );
     }
@@ -107,7 +107,6 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
 
     private _closeDeleteDialog = (): void => {
         this.setState({ showDeleteDialog: true });
-        this.props.setShowPanel(true)();
     }
 
     private async _onTemplateSaved() {

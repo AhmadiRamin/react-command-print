@@ -55,6 +55,7 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
         dialog.listId = this.context.pageContext.list.id.toString();
         dialog.itemId = event.selectedRows[0].getValueByName('ID');
+        dialog.title = event.selectedRows[0].getValueByName('Title');
         dialog.show();        
         break;
       default:
