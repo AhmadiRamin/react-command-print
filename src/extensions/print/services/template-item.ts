@@ -4,4 +4,6 @@ export default interface ITemplateItem{
     Footer:string;
     Columns:any[];
     ListId:string;
+    HeaderAdvancedMode:boolean;
+    FooterAdvancedMode:boolean;
 }

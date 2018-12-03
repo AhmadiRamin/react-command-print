@@ -10,14 +10,16 @@ import AddUpdateTemplatePanelState from './add-update-template-panel-state';
 import AddUpdateTemplatePanelProps from './add-update-template-panel-props';
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { IDragDropEvents } from 'office-ui-fabric-react/lib/utilities/dragdrop/interfaces';
-import { DetailsList, IColumn, Selection, DetailsListLayoutMode, IDetailsRowProps, SelectionMode, DetailsRow } from 'office-ui-fabric-react/lib/DetailsList';
+import { DetailsList, IColumn, Selection, DetailsListLayoutMode, IDetailsRowProps, SelectionMode, DetailsRow, IDetailsRowCheckProps } from 'office-ui-fabric-react/lib/DetailsList';
 import { IColumnReorderOptions } from 'office-ui-fabric-react/lib/DetailsList';
 import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
 import ListService from '../../services/list-service';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import { ColorPicker } from 'office-ui-fabric-react/lib/ColorPicker';
-import { Icon } from 'office-ui-fabric-react/lib/Icon';
+import { style } from "typestyle";
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+
 let _draggedItem: any = null;
 let _draggedIndex = -1;
 
@@ -50,42 +52,53 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             isResizable: false
         }];
     private _defautState: any;
-    private _defaultColor: string;
-
+    private _sectionBackgroundColor: string;
+    private _sectionFontColor: string;
+    private _selectedColor: string;
     constructor(props) {
         super(props);
-        
+
         this.listService = new ListService();
-        this._defaultColor = '#eeeeee';
+        this._sectionBackgroundColor = '#CECECE';
+        this._sectionFontColor = '#000';
+        this._selectedColor = '#000';
         this._defautState = {
             helperItems: [{
                 Title: 'Drag your fields here'
             }],
             listId: this.props.listId,
             templateColumns: [],
-            section: '',
+            section: {
+                Title: '',
+                BackgroundColor: this._sectionBackgroundColor,
+                FontColor: this._sectionFontColor,
+                Type: 'Section'
+            },
             columns: this._columns,
             itemColumns: this._itemColumns,
             isColumnReorderEnabled: false,
             frozenColumnCountFromStart: '1',
             frozenColumnCountFromEnd: '0',
             showColorPicker: false,
-            color: this._defaultColor
+            isFontColorPicker: false
         };
         this.state = {
             ...this._defautState,
             fields: []
         };
-        
+
         this._fieldSelection = new Selection();
         this._itemSelection = new Selection();
         this._renderItemColumn = this._renderItemColumn.bind(this);
         this._onRemoveItem = this._onRemoveItem.bind(this);
-        this._closeColorPicker=this._closeColorPicker.bind(this);
-        this._onColorChange=this._onColorChange.bind(this);
-        this._onColorSelected=this._onColorSelected.bind(this);
-        this._openColorPicker=this._openColorPicker.bind(this);
-        this.props.setShowTemplatePanel(this._onClosePanel.bind(this));
+        this._closeColorPicker = this._closeColorPicker.bind(this);
+        this._onColorChange = this._onColorChange.bind(this);
+        this._onColorSelected = this._onColorSelected.bind(this);
+        this._openColorPicker = this._openColorPicker.bind(this);
+        this._footerAdvancedToggleChange = this._footerAdvancedToggleChange.bind(this);
+        this._headerAdvancedToggleChange = this._headerAdvancedToggleChange.bind(this);
+        this._headerEditorChange = this._headerEditorChange.bind(this);
+        this._footerEditorChange = this._footerEditorChange.bind(this);
     }
 
     public async componentDidMount() {
@@ -97,6 +110,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
     public render() {
         const { fields, columns, itemColumns, helperItems } = this.state;
+        const { Title, Header, Footer, HeaderAdvancedMode, FooterAdvancedMode } = this.props.template;
         const items = this.props.template.Columns;
 
         return (
@@ -111,7 +125,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                     onRenderFooterContent={this._onRenderFooterContent}
                 >
                     <div className={`${styles.AddUpdateTemplate} ms-Grid}`}>
-                        <TextField value={this.props.template.Title} label="Name" onChanged={(name) => this.props.onTemplateChanged({ ...this.props.template, Title: name })} />
+                        <TextField value={Title} label="Name" onChanged={(name) => this.props.onTemplateChanged({ ...this.props.template, Title: name })} />
                         <Label>Columns (Drag fields from the left table to the right one)</Label>
                         <div className="ms-Grid-row">
                             <div className={`ms-Grid-col ms-sm6 ms-md6 ms-lg6`}>
@@ -169,63 +183,111 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                         <Label>Add section</Label>
                         <div className="ms-Grid-row">
                             <div className="ms-Grid-col ms-sm10 ms-md10 ms-lg10">
-                                <TextField onChanged={(value) => this.setState({ section: value })} value={this.state.section} />
+                                <TextField onChanged={(value) => this.setState({ section: { ...this.state.section, Title: value } })} value={this.state.section.Title} />
 
                             </div>
                             <div className="ms-Grid-col ms-sm1 ms-md2 ms-lg2">
-                                <IconButton iconProps={{ iconName: 'Color' }} title="Change color" style={{color: this.state.color}} ariaLabel="Change Color" onClick={this._openColorPicker} />                                
+                                <IconButton iconProps={{ iconName: 'Color' }} title="Background Color" style={{ color: this.state.section.BackgroundColor }} ariaLabel="Background Color" onClick={() => this._openColorPicker(false)} />
+                                <IconButton iconProps={{ iconName: 'FontColor' }} title="Font Color" style={{ color: this.state.section.FontColor }} ariaLabel="Font Color" onClick={() => this._openColorPicker(true)} />
                                 <IconButton iconProps={{ iconName: 'Accept' }} title="Accept" ariaLabel="Accept" onClick={this._addSection} />
                             </div>
                         </div>
-                        <Label>Header</Label>
+
+                        <Toggle
+                            defaultChecked={HeaderAdvancedMode}
+                            label="Header"
+                            onText="Advanced mode"
+                            offText="Simple mode"
+                            onChanged={this._headerAdvancedToggleChange}
+                        />
                         <div className={styles.editorContainer}>
-                            <ReactQuill modules={modules} formats={formats} className={styles.quillEditor} value={this.props.template.Header} onChange={(Header) => this.props.onTemplateChanged({ ...this.props.template, Header })} />
+                            <div hidden={HeaderAdvancedMode}>
+                                <ReactQuill modules={modules} formats={formats} className={styles.quillEditor} value={HeaderAdvancedMode?'':Header} onChange={this._headerEditorChange} />
+                            </div>
+                            <div hidden={!HeaderAdvancedMode}>
+                                <TextField multiline rows={11} placeholder="Put your HTML code here..." value={Header} onChanged={(value) => this.props.onTemplateChanged({ ...this.props.template, Header: value })} />
+                            </div>
                         </div>
-                        <Label>Footer</Label>
+                        <Toggle
+                            defaultChecked={FooterAdvancedMode}
+                            label="Footer"
+                            onText="Advanced mode"
+                            offText="Simple mode"
+                            onChanged={this._footerAdvancedToggleChange}
+                        />
                         <div className={styles.editorContainer}>
-                            <ReactQuill modules={modules} formats={formats} className={styles.quillEditor} value={this.props.template.Footer} onChange={(Footer) => this.props.onTemplateChanged({ ...this.props.template, Footer })} />
+
+                            <div hidden={FooterAdvancedMode}>
+                                <ReactQuill modules={modules} formats={formats} className={styles.quillEditor} value={FooterAdvancedMode?'':Footer} onChange={this._footerEditorChange} />
+                            </div>
+                            <div hidden={!FooterAdvancedMode}>
+                                <TextField multiline rows={11} value={Footer} onChanged={(value) => this.props.onTemplateChanged({ ...this.props.template, Footer: value })} placeholder="Put your HTML code here..." />
+                            </div>
                         </div>
 
                     </div>
                     <Dialog
-                    onDismissed={this._closeColorPicker}
-                    isClickableOutsideFocusTrap={true}                    
-                    isOpen={this.state.showColorPicker}
-                    ignoreExternalFocusing={true}
-                    dialogContentProps={{
-                        type: DialogType.normal,
-                        title: 'Color picker',
-                        showCloseButton:true
-                    }}
-                    modalProps={{
-                        titleAriaId: 'myLabelId',
-                        ignoreExternalFocusing:true,
+                        onDismissed={this._closeColorPicker}
+                        isClickableOutsideFocusTrap={true}
+                        isOpen={this.state.showColorPicker}
+                        ignoreExternalFocusing={true}
+                        dialogContentProps={{
+                            type: DialogType.normal,
+                            title: 'Color picker',
+                            showCloseButton: true
+                        }}
+                        modalProps={{
+                            titleAriaId: 'myLabelId',
+                            ignoreExternalFocusing: true,
 
-                        subtitleAriaId: 'mySubTextId',
-                        isBlocking: true,
-                        containerClassName: 'ms-dialogMainOverride'
-                    }}
-                >
-                        <ColorPicker color={this.state.color} onColorChanged={this._onColorChange} />
-                    <DialogFooter>
-                        <PrimaryButton onClick={this._onColorSelected} text="OK" />
-                        <DefaultButton onClick={this._closeColorPicker} text="Cancel" />
-                    </DialogFooter>
-                </Dialog>
+                            subtitleAriaId: 'mySubTextId',
+                            isBlocking: true,
+                            containerClassName: 'ms-dialogMainOverride'
+                        }}
+                    >
+                        <ColorPicker color={this._selectedColor} onColorChanged={this._onColorChange} />
+                        <DialogFooter>
+                            <PrimaryButton onClick={this._onColorSelected} text="OK" />
+                            <DefaultButton onClick={this._closeColorPicker} text="Cancel" />
+                        </DialogFooter>
+                    </Dialog>
                 </Panel>
-                
+
             </div>
 
         );
     }
 
-    private _openColorPicker(){
+    private _headerEditorChange(value){
+        this.props.onTemplateChanged({ ...this.props.template, Header:value });
+    }
+
+    private _footerEditorChange(value){
+        this.props.onTemplateChanged({ ...this.props.template, Footer:value });
+    }
+
+    private _headerAdvancedToggleChange(checked: boolean) {
+        this.props.onTemplateChanged({
+            ...this.props.template,
+            HeaderAdvancedMode: checked
+        });
+    }
+
+    private _footerAdvancedToggleChange(checked: boolean) {
+        this.props.onTemplateChanged({
+            ...this.props.template,
+            FooterAdvancedMode: checked
+        });
+    }
+
+    private _openColorPicker(isFontColorPicker: boolean) {
         this.setState({
-            showColorPicker: true
+            showColorPicker: true,
+            isFontColorPicker
         });
     }
     private _onColorChange(color: string): void {
-        this._defaultColor = color;
+        this._selectedColor = color;
     }
 
     private _closeColorPicker() {
@@ -235,25 +297,26 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
     }
 
     private _onColorSelected() {
+        const fontColorChanged = this.state.isFontColorPicker;
         this.setState({
             showColorPicker: false,
-            color: this._defaultColor            
+            section: {
+                ...this.state.section,
+                BackgroundColor: !fontColorChanged ? this._selectedColor : this.state.section.BackgroundColor,
+                FontColor: fontColorChanged ? this._selectedColor : this.state.section.FontColor
+            }
         });
     }
 
     private _addSection = () => {
-        const newSection = {
-            Title: this.state.section,
-            Type: 'Section',
-            Id: this.state.section
-        };
+
         this.setState({
-            section: ''
+            section: this._defautState.section
         });
         this.props.onTemplateChanged(
             {
                 ...this.props.template,
-                Columns: this.props.template.Columns.concat(newSection)
+                Columns: this.props.template.Columns.concat(this.state.section)
             }
         );
 
@@ -274,11 +337,12 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
     }
 
     private _renderRow = (props: IDetailsRowProps, defaultRender?: any) => {
-
-        if (props.item.Type === 'Section')
-            return <DetailsRow {...props} className={styles.sectionRow}/>;
-        else
-            return <DetailsRow {...props} />;
+        if (props.item.Type === 'Section') {
+            const { BackgroundColor, FontColor } = props.item;
+            const className = style({ backgroundColor: BackgroundColor, color: FontColor });
+            return <DetailsRow {...props} className={className} />;
+        }
+        return <DetailsRow {...props} />;
     }
 
     private _renderItemColumn(item: any, index: number, column: IColumn) {

@@ -4,7 +4,7 @@ import ReactToPrint from "react-to-print";
 
 import styles from './print-dialog.module.scss';
 import {
-    DialogContent, IDropdownOption
+    DialogContent, IDropdownOption, SelectionMode
 } from 'office-ui-fabric-react';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import IPrintDialogContentProps from './print-dialog-content-props';
@@ -20,6 +20,7 @@ import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import ListService from '../../services/list-service';
 import { isArray } from '@pnp/common';
 import ITemplateItem from '../../services/template-item';
+import { style } from 'typestyle';
 const _items: any[] = [];
 export default class PrintDialogContent extends React.Component<IPrintDialogContentProps, IPrintDialogContentState> {
     private componentRef;
@@ -60,15 +61,15 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
             items: _items,
             showPanel: false,
             hideTemplateLoading: true,
-            printTemplate:null,
-            selectedTemplateIndex:-1,
-            itemContent:{}
+            printTemplate: null,
+            selectedTemplateIndex: -1,
+            itemContent: {}
         };
         this.listService = new ListService();
         this._onTemplateAdded = this._onTemplateAdded.bind(this);
         this._onTemplateUpdated = this._onTemplateUpdated.bind(this);
         this._onTemplateRemoved = this._onTemplateRemoved.bind(this);
-        this.getItemContent=this.getItemContent.bind(this);
+        this.getItemContent = this.getItemContent.bind(this);
         // Initialize icons
         initializeIcons();
     }
@@ -138,27 +139,27 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
     }
 
 
-    private _onDropDownChanged = (option: IDropdownOption, index?: number) => {        
-        
+    private _onDropDownChanged = (option: IDropdownOption, index?: number) => {
+
         this.loadTemplate(index);
     }
 
     private _onTemplateUpdated(index: number, template: ITemplateItem) {
         const newTemplatesList = [...this.state.templates];
-        newTemplatesList[index] = {...template,Columns:JSON.stringify(template.Columns)};
+        newTemplatesList[index] = { ...template, Columns: JSON.stringify(template.Columns) };
         this.setState({
             templates: newTemplatesList
         });
-        if(this.state.selectedTemplateIndex === index)
+        if (this.state.selectedTemplateIndex === index)
             this.loadTemplate(index);
-        
+
     }
 
-    private loadTemplate(index:number){
+    private loadTemplate(index: number) {
         const template = this.state.templates[index];
 
         this.setState({
-            hideTemplateLoading:false
+            hideTemplateLoading: false
         });
 
         const columns: any[] = JSON.parse(template.Columns);
@@ -178,11 +179,12 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                                 setKey="set"
                                 layoutMode={DetailsListLayoutMode.fixedColumns}
                                 checkboxVisibility={CheckboxVisibility.hidden}
-                                selectionPreservedOnEmptyClick={true}
                             />
                         );
                     }
-                    content.push(<div className={styles.templateSection}><span>{item.Title}</span></div>);
+                    const { BackgroundColor, FontColor } = item;
+                    const className = style({ backgroundColor: BackgroundColor, color: FontColor });
+                    content.push(<div className={`${styles.templateSection} ${className}`}><span>{item.Title}</span></div>);
                     table = [];
                 }
                 if (item.Type === "Field") {
@@ -191,7 +193,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                         Value: this.state.itemContent[item.InternalName]
                     });
                 }
-                if(i+1 === columns.length){
+                if (i + 1 === columns.length) {
                     if (table.length > 0) {
                         content.push(
                             <DetailsList
@@ -202,7 +204,6 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                                 className={styles.templateTable}
                                 layoutMode={DetailsListLayoutMode.fixedColumns}
                                 checkboxVisibility={CheckboxVisibility.hidden}
-                                selectionPreservedOnEmptyClick={true}
                             />
                         );
                     }
@@ -210,14 +211,14 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
             }
         }
         this.setState({
-            printTemplate:{
+            printTemplate: {
                 header: template.Header,
                 footer: template.Footer,
                 content
             },
-            selectedTemplateIndex:index,
-            hideTemplateLoading:true
-        });  
+            selectedTemplateIndex: index,
+            hideTemplateLoading: true
+        });
     }
 
     private async _onTemplateRemoved(id: number, template: ITemplateItem) {
@@ -255,10 +256,10 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
         });
     }
 
-    private async getItemContent(){
-        const {listId,itemId} = this.props;
-        const itemContent = await this.listService.GetItemById(listId,itemId);
-        
+    private async getItemContent() {
+        const { listId, itemId } = this.props;
+        const itemContent = await this.listService.GetItemById(listId, itemId);
+
         this.setState({
             itemContent
         });

@@ -24,9 +24,10 @@ export default class ListHelper {
                     "<Field DisplayName='ListId' Type='Text' Required='FALSE' StaticName='ListId' Name='ListId' />",
                     "<Field DisplayName='Header' Type='Note' Required='FALSE' StaticName='Header' Name='Header' NumLines='6' IsolateStyles='FALSE' RestrictedMode='TRUE' AppendOnly='FALSE' UnlimitedLengthInDocumentLibrary='FALSE' RichText='FALSE' RichTextMode='Compatible' />",
                     "<Field DisplayName='Footer' Type='Note' Required='FALSE' StaticName='Footer' Name='Footer' RichText='FALSE' RichTextMode='Compatible' />",
-                    "<Field DisplayName='Columns' Type='Note' Required='FALSE' StaticName='Columns' Name='Columns' RichText='FALSE' RichTextMode='Compatible' />"
-                ],
-                "FieldTexts": ["ListId", "Header", "Footer", "Columns"]
+                    "<Field DisplayName='Columns' Type='Note' Required='FALSE' StaticName='Columns' Name='Columns' RichText='FALSE' RichTextMode='Compatible' />",
+                    "<Field DisplayName='HeaderAdvancedMode' Type='Boolean' Required='FALSE' StaticName='HeaderAdvancedMode' Name='HeaderAdvancedMode' />",
+                    "<Field DisplayName='FooterAdvancedMode' Type='Boolean' Required='FALSE' StaticName='FooterAdvancedMode' Name='FooterAdvancedMode' />"
+                ]
             }
         ];
 

@@ -25,6 +25,8 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
                 Columns: [],
                 Footer: '',
                 Header: '',
+                FooterAdvancedMode:false,
+                HeaderAdvancedMode:false,
                 Title: '',
                 ListId: this.props.listId
             },
