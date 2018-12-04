@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { initializeIcons } from '@uifabric/icons';
 import ReactToPrint from "react-to-print";
-
 import styles from './print-dialog.module.scss';
 import {
-    DialogContent, IDropdownOption, SelectionMode
+    DialogContent, IDropdownOption
 } from 'office-ui-fabric-react';
 import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
 import IPrintDialogContentProps from './print-dialog-content-props';
 import IPrintDialogContentState from './print-dialog-content-state';
 import PrintTemplateContent from '../print-dialog-template-content/print-template-content';
 import SettingsPanel from '../settings-panel/settings-panel';
-import { DetailsList, DetailsListLayoutMode, IColumn, CheckboxVisibility } from 'office-ui-fabric-react/lib/DetailsList';
 import ListHelper from '../../util/list-helper';
 import {
     Dropdown
@@ -25,22 +23,6 @@ const _items: any[] = [];
 export default class PrintDialogContent extends React.Component<IPrintDialogContentProps, IPrintDialogContentState> {
     private componentRef;
     private listService: ListService;
-    private _columns: IColumn[] = [
-        {
-            key: 'NameColumn',
-            name: 'Name',
-            fieldName: 'Name',
-            minWidth: 100,
-            maxWidth: 200
-        },
-        {
-            key: 'ValueColumn',
-            name: 'Value',
-            fieldName: 'Value',
-            minWidth: 100,
-            maxWidth: 200
-        }
-    ];
     constructor(props) {
         super(props);
 
@@ -168,19 +150,21 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
         if (columns.length > 0) {
             for (var i = 0; i < columns.length; i++) {
                 const item = columns[i];
-                console.log(item);
                 if (item.Type === "Section") {
                     if (table.length > 0) {
                         content.push(
-                            <DetailsList
-                                items={table}
-                                columns={this._columns}
-                                isHeaderVisible={false}
-                                className={styles.templateTable}
-                                setKey="set"
-                                layoutMode={DetailsListLayoutMode.fixedColumns}
-                                checkboxVisibility={CheckboxVisibility.hidden}
-                            />
+                            <table className={styles.templateTable}>
+                                {
+                                    table.map(el => <tr>
+                                        <td className={styles.nameColumn}>
+                                            {el.Name}
+                                        </td>
+                                        <td className={styles.valueColumn}>
+                                            {el.Value}
+                                        </td>
+                                    </tr>)
+                                }
+                            </table>
                         );
                     }
                     const { BackgroundColor, FontColor } = item;
@@ -189,23 +173,36 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                     table = [];
                 }
                 if (item.Type === "Field") {
-                    table.push({
-                        Name: item.Title,
-                        Value: this.state.itemContent[item.InternalName]
-                    });
+                    if (template.SkipBlankColumns) {
+                        if (this.state.itemContent[item.InternalName].length > 0)
+                            table.push({
+                                Name: item.Title,
+                                Value: this.state.itemContent[item.InternalName]
+                            });
+                    }
+                    else {
+                        table.push({
+                            Name: item.Title,
+                            Value: this.state.itemContent[item.InternalName]
+                        });
+                    }
+
                 }
                 if (i + 1 === columns.length) {
                     if (table.length > 0) {
                         content.push(
-                            <DetailsList
-                                items={table}
-                                columns={this._columns}
-                                isHeaderVisible={false}
-                                setKey="set"
-                                className={styles.templateTable}
-                                layoutMode={DetailsListLayoutMode.fixedColumns}
-                                checkboxVisibility={CheckboxVisibility.hidden}
-                            />
+                            <table className={styles.templateTable}>
+                                {
+                                    table.map(el => <tr>
+                                        <td className={styles.nameColumn}>
+                                            {el.Name}
+                                        </td>
+                                        <td className={styles.valueColumn}>
+                                            {el.Value}
+                                        </td>
+                                    </tr>)
+                                }
+                            </table>
                         );
                     }
                 }

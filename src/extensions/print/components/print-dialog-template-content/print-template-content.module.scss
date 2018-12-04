@@ -29,34 +29,7 @@
 }
 @media print{
     .printHeader{
-        position: fixed;
-        margin-left: 25px !important;
-        margin-right: 25px;
-        width: 100%; 
-        top: 0; 
-        left: 0; 
-        right: 0;
-    }    
-    .printFooter {
-        flex: none;
-        margin-left: 25px !important;
-        position: fixed; 
-        width: 100%; 
-        bottom: 0; 
-        left: 0;
-        right: 0;
-    }
-    .printContent{
-        margin-top: 80px;
-    }
-    .templateSection{
-        margin: 5px;
-        background-color: #D3D3D1;
-        height: 40px;
-    }
-    .templateTable{
-        margin: 5px;
-        border: 1px #eeeeee solid; 
+        height: 70px;
     }
 }
 @page {

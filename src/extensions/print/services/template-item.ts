@@ -6,4 +6,5 @@ export default interface ITemplateItem{
     ListId:string;
     HeaderAdvancedMode:boolean;
     FooterAdvancedMode:boolean;
+    SkipBlankColumns:boolean;
 }

@@ -25,8 +25,9 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
                 Columns: [],
                 Footer: '',
                 Header: '',
-                FooterAdvancedMode:false,
-                HeaderAdvancedMode:false,
+                FooterAdvancedMode: false,
+                HeaderAdvancedMode: false,
+                SkipBlankColumns: false,
                 Title: '',
                 ListId: this.props.listId
             },
@@ -51,9 +52,9 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
     public render() {
         return (
             <div className={styles.SettingsPanel}>
-                <Panel isOpen={this.props.showPanel} 
+                <Panel isOpen={this.props.showPanel}
                     onDismissed={this.props.setShowPanel(false)}
-                    
+
                     type={PanelType.medium} headerText="Print Settings">
                     <h3>Print Templates:</h3>
                     <div style={{ display: 'flex', alignItems: 'stretch', height: '40px', marginBottom: '10px' }}>
@@ -75,27 +76,27 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
                         showTemplatePanel={this.state.showTemplatePanel}
                         setShowTemplatePanel={this._setShowTemplatePanel} />
                     <Dialog
-                    hidden={this.state.showDeleteDialog}
-                    onDismiss={this._closeDeleteDialog}
-                    dialogContentProps={{
-                        type: DialogType.normal,
-                        title: 'Remove template',
-                        subText: 'Are you sure you want to delete this template?'
-                    }}
-                    modalProps={{
-                        titleAriaId: 'myLabelId',
-                        subtitleAriaId: 'mySubTextId',
-                        isBlocking: true,
-                        containerClassName: 'ms-dialogMainOverride'
-                    }}
-                >
-                    {null /** You can also include null values as the result of conditionals */}
-                    <DialogFooter>
-                        <PrimaryButton onClick={this._removeTempate} text="Delete" />
-                        <DefaultButton onClick={this._closeDeleteDialog} text="Cancel" />
-                    </DialogFooter>
-                </Dialog>
-                </Panel>                
+                        hidden={this.state.showDeleteDialog}
+                        onDismiss={this._closeDeleteDialog}
+                        dialogContentProps={{
+                            type: DialogType.normal,
+                            title: 'Remove template',
+                            subText: 'Are you sure you want to delete this template?'
+                        }}
+                        modalProps={{
+                            titleAriaId: 'myLabelId',
+                            subtitleAriaId: 'mySubTextId',
+                            isBlocking: true,
+                            containerClassName: 'ms-dialogMainOverride'
+                        }}
+                    >
+                        {null /** You can also include null values as the result of conditionals */}
+                        <DialogFooter>
+                            <PrimaryButton onClick={this._removeTempate} text="Delete" />
+                            <DefaultButton onClick={this._closeDeleteDialog} text="Cancel" />
+                        </DialogFooter>
+                    </Dialog>
+                </Panel>
             </div>
         );
     }

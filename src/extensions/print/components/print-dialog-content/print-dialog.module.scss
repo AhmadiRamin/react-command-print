@@ -18,6 +18,7 @@
         margin-top: 10px;
     }
     .templateSection{
+        width: 100%;
         margin: 5px;
         height: 35px;
     }
@@ -25,25 +26,68 @@
         padding: 8px;
         display: block;
     }
-    .templateTable{
+    .templateTable {
         margin: 5px;
-        border: 1px #eeeeee solid; 
-        overflow-x:hidden;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .templateTable td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    .templateTable tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    .nameColumn{
+        width:30%;
+    }
+
+    .valueColumn{
+        width:70%;
     }
 }
 @media print{
-    .templateTable{
-        margin: 5px;
-        border: 1px #eeeeee solid; 
-        overflow-x:hidden;
+    .templateContent{
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
     .templateSection{
+        width: 100%;
         margin: 5px;
-        background-color: #D3D3D1;
         height: 35px;
     }
     .templateSection span{        
-        padding: 5px;
+        padding: 8px;
         display: block;
+    }
+    .templateTable {
+        margin: 5px;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .templateTable td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    .templateTable tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+
+    .nameColumn{
+        width:30%;
+    }
+
+    .valueColumn{
+        width:70%;
     }
 }

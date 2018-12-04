@@ -26,7 +26,8 @@ export default class ListHelper {
                     "<Field DisplayName='Footer' Type='Note' Required='FALSE' StaticName='Footer' Name='Footer' RichText='FALSE' RichTextMode='Compatible' />",
                     "<Field DisplayName='Columns' Type='Note' Required='FALSE' StaticName='Columns' Name='Columns' RichText='FALSE' RichTextMode='Compatible' />",
                     "<Field DisplayName='HeaderAdvancedMode' Type='Boolean' Required='FALSE' StaticName='HeaderAdvancedMode' Name='HeaderAdvancedMode' />",
-                    "<Field DisplayName='FooterAdvancedMode' Type='Boolean' Required='FALSE' StaticName='FooterAdvancedMode' Name='FooterAdvancedMode' />"
+                    "<Field DisplayName='FooterAdvancedMode' Type='Boolean' Required='FALSE' StaticName='FooterAdvancedMode' Name='FooterAdvancedMode' />",
+                    "<Field DisplayName='SkipBlankColumns' Type='Boolean' Required='FALSE' StaticName='SkipBlankColumns' Name='SkipBlankColumns' />"
                 ]
             }
         ];

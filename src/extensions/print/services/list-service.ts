@@ -13,26 +13,21 @@ export default class ListService {
         this.buildExclusions();
     }
 
-    public async GetItemById(listId: string, itemId: number):Promise<any>{
-        return new Promise<any>((resolve: (values:any) => void, reject: (error: any) => void): void => {
-            
-                //Get the item values
-                sp.web.lists.getById(listId).items.getById(itemId).fieldValuesAsText.get()
-                    .then((result: any) => {
-                        resolve(result);
-                    })
-                    .catch((error: any): void => {
-                        Log.error(LOG_SOURCE, error);
-                        this.safeLog(error);
-                        reject(error);
-                    });
+    public async GetItemById(listId: string, itemId: number): Promise<any> {
+        return sp.web.lists.getById(listId).items.getById(itemId).fieldValuesAsText.get()
+            .then((result: any) => {
+                return result;
+            })
+            .catch((error: any): void => {
+                Log.error(LOG_SOURCE, error);
+                this.safeLog(error);
             });
     }
     /**
      * GetTemplatesByListId
      */
     public async GetTemplatesByListId(listId: string): Promise<any[]> {
-        return sp.web.lists.getByTitle('PrintSettings').items.filter(`ListId eq '${listId}'`).select('Id', 'Title', 'Header', 'Footer', 'Columns', 'ListId','HeaderAdvancedMode','FooterAdvancedMode').get().then(items => {
+        return sp.web.lists.getByTitle('PrintSettings').items.filter(`ListId eq '${listId}'`).select('Id', 'Title', 'Header', 'Footer', 'Columns', 'ListId', 'HeaderAdvancedMode', 'FooterAdvancedMode','SkipBlankColumns').get().then(items => {
             return items;
         }).catch(error => {
             Log.error(LOG_SOURCE, error);
@@ -44,7 +39,7 @@ export default class ListService {
      * GetFieldsByListId
      */
     public async GetFieldsbyListId(listId: string): Promise<Array<IListField>> {
-        return sp.web.lists.getById(listId).fields.select('Id', 'Title', 'InternalName','TypeAsString','IsDependentLookup','StaticName').get().then((results: any) => {
+        return sp.web.lists.getById(listId).fields.select('Id', 'Title', 'InternalName', 'TypeAsString', 'IsDependentLookup', 'StaticName').get().then((results: any) => {
             //Setup the list fields
             const _listFields = new Array<IListField>();
             // This includes any field of a type we don't want (such as computed)
@@ -77,7 +72,7 @@ export default class ListService {
     }
 
     public async UpdateTemplate(id: number, template: any): Promise<boolean> {
-       
+
         return sp.web.lists.getByTitle('PrintSettings').items.getById(id).update(template).then(e => true).catch(error => {
             Log.error(LOG_SOURCE, error);
             return error.message;

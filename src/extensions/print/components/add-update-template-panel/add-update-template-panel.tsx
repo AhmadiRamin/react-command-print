@@ -10,7 +10,7 @@ import AddUpdateTemplatePanelState from './add-update-template-panel-state';
 import AddUpdateTemplatePanelProps from './add-update-template-panel-props';
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { IDragDropEvents } from 'office-ui-fabric-react/lib/utilities/dragdrop/interfaces';
-import { DetailsList, IColumn, Selection, DetailsListLayoutMode, IDetailsRowProps, SelectionMode, DetailsRow, IDetailsRowCheckProps } from 'office-ui-fabric-react/lib/DetailsList';
+import { DetailsList, IColumn, Selection, DetailsListLayoutMode, IDetailsRowProps, SelectionMode, DetailsRow } from 'office-ui-fabric-react/lib/DetailsList';
 import { IColumnReorderOptions } from 'office-ui-fabric-react/lib/DetailsList';
 import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
 import ListService from '../../services/list-service';
@@ -99,6 +99,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
         this._headerAdvancedToggleChange = this._headerAdvancedToggleChange.bind(this);
         this._headerEditorChange = this._headerEditorChange.bind(this);
         this._footerEditorChange = this._footerEditorChange.bind(this);
+        this._skipBlankColumnsToggleChange = this._skipBlankColumnsToggleChange.bind(this);
     }
 
     public async componentDidMount() {
@@ -111,7 +112,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
     public render() {
         const { fields, columns, itemColumns, helperItems } = this.state;
-        const { Title, Header, Footer, HeaderAdvancedMode, FooterAdvancedMode } = this.props.template;
+        const { Title, Header, Footer, HeaderAdvancedMode, FooterAdvancedMode, SkipBlankColumns } = this.props.template;
         const items = this.props.template.Columns;
 
         return (
@@ -225,7 +226,13 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                                 <TextField multiline rows={11} value={Footer} onChanged={(value) => this.props.onTemplateChanged({ ...this.props.template, Footer: value })} placeholder="Put your HTML code here..." />
                             </div>
                         </div>
-
+                        <Toggle
+                            defaultChecked={SkipBlankColumns}
+                            label="Skip blank columns"
+                            onText="On"
+                            offText="Off"
+                            onChanged={this._skipBlankColumnsToggleChange}
+                        />
                     </div>
                     <Dialog
                         onDismissed={this._closeColorPicker}
@@ -257,6 +264,10 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             </div>
 
         );
+    }
+
+    private _skipBlankColumnsToggleChange(value){
+        this.props.onTemplateChanged({ ...this.props.template, SkipBlankColumns:value });
     }
 
     private _headerEditorChange(value){
