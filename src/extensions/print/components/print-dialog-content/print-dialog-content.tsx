@@ -99,11 +99,11 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                                 trigger={() => <IconButton iconProps={{ iconName: 'Print' }} title="Print" ariaLabel="Print" />}
                                 content={() => this.componentRef}
                             />
-                            <div hidden={true}>
+                            <span hidden={true}>
                             <IconButton iconProps={{ iconName: 'Mail' }} title="Mail" ariaLabel="Mail" onClick={this._sendAsEmail} />
                             <IconButton iconProps={{ iconName: 'PDF' }} title="PDF" ariaLabel="PDF" />
                             <IconButton iconProps={{ iconName: 'ExcelLogo' }} title="Export to excel" ariaLabel="ExcelLogo" />
-                            </div>
+                            </span>
                             <span hidden={!this.state.isSiteAdmin}><IconButton iconProps={{ iconName: 'Settings' }} title="Settings" ariaLabel="Settings" onClick={this._setShowPanel(true)} /></span>
                         </div>
                     </div>
@@ -133,9 +133,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                 Body,
                 Subject: "Test"
             };
-            sp.utility.sendEmail(email).then(email => {
-                alert('Email has been sent!');
-            });
+            sp.utility.sendEmail(email).then();
         }
         
     }
