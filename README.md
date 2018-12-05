@@ -46,6 +46,11 @@ This sample illustrates the following concepts on top of the SharePoint Framewor
 * Ignore blank columns
 * Grouping columns by adding sections
 
+Next version features:
+
+* Send the template to emails.
+* Convert to PDF.
+* Print multiple items.
 
 ## Debug URL for testing
 Here's a debug URL for testing around this sample. **Updated based on your manifest id for easy testing of the sample**.
