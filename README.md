@@ -3,7 +3,7 @@
 ## Summary
 This sample shows how you can print list items using different templates, site admin can add, edit or remove templates and users can print items based on those templates.
 
-![react-command-print](./assets/screenshot.PNG)
+![react-command-print](./assets/screenshot.gif)
 
 ## Used SharePoint Framework Version 
 ![drop](https://img.shields.io/badge/version-1.7-green.svg)
