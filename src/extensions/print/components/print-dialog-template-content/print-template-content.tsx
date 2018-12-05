@@ -1,18 +1,13 @@
 import * as React from 'react';
-
 import ReactHtmlParser from 'react-html-parser';
 import styles from './print-template-content.module.scss';
 import IPrintTemplateProps from './print-template-props';
-import PrintTemplateContentState from './print-template-content-state';
 
 
-class PrintTemplateContent extends React.Component<IPrintTemplateProps, PrintTemplateContentState>{
+class PrintTemplateContent extends React.Component<IPrintTemplateProps, {}>{
 
     constructor(props) {
         super(props);
-        this.state = {
-            content: []
-        };
     }
     public render() {
         return (

@@ -14,4 +14,6 @@ export default interface AddUpdateTemplatePanelState {
     section: ISection;
     showColorPicker: boolean;
     isFontColorPicker: boolean;
+    sectionErrorMessage: string;
+    titleErrorMessage: string;
 }

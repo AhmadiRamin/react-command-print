@@ -1,4 +1,4 @@
-import ITemplateItem from "../../services/template-item";
+import ITemplateItem from "../../models/template-item";
 
 export default interface AddUpdateTemplatePanelProps{
     showTemplatePanel:boolean;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactElementToString  from 'react-element-to-string';
 import { initializeIcons } from '@uifabric/icons';
 import ReactToPrint from "react-to-print";
 import styles from './print-dialog.module.scss';
@@ -11,14 +12,18 @@ import IPrintDialogContentState from './print-dialog-content-state';
 import PrintTemplateContent from '../print-dialog-template-content/print-template-content';
 import SettingsPanel from '../settings-panel/settings-panel';
 import ListHelper from '../../util/list-helper';
+import ReactHtmlParser from 'react-html-parser';
 import {
     Dropdown
 } from 'office-ui-fabric-react';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import ListService from '../../services/list-service';
 import { isArray } from '@pnp/common';
-import ITemplateItem from '../../services/template-item';
+import ITemplateItem from '../../models/template-item';
 import { style } from 'typestyle';
+import printStyles from '../print-dialog-template-content/print-template-content.module.scss';
+import { sp, EmailProperties } from '@pnp/sp';
+
 const _items: any[] = [];
 export default class PrintDialogContent extends React.Component<IPrintDialogContentProps, IPrintDialogContentState> {
     private componentRef;
@@ -45,13 +50,16 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
             hideTemplateLoading: true,
             printTemplate: null,
             selectedTemplateIndex: -1,
-            itemContent: {}
+            itemContent: {},
+            isSiteAdmin:false
         };
         this.listService = new ListService();
         this._onTemplateAdded = this._onTemplateAdded.bind(this);
         this._onTemplateUpdated = this._onTemplateUpdated.bind(this);
         this._onTemplateRemoved = this._onTemplateRemoved.bind(this);
         this.getItemContent = this.getItemContent.bind(this);
+        this._makeEmailBody=this._makeEmailBody.bind(this);
+        this._sendAsEmail = this._sendAsEmail.bind(this);
         // Initialize icons
         initializeIcons();
     }
@@ -79,28 +87,30 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                 </div>
                 <div className="ms-Grid" dir="ltr" hidden={!this.state.hideLoading}>
                     <div className="ms-Grid-row">
-                        <div className="ms-Grid-col ms-sm6 ms-md8 ms-lg8">
+                        <div className="ms-Grid-col ms-sm8 ms-md8 ms-lg8">
                             <Dropdown
                                 placeHolder="Select your template..."
                                 options={this.state.templates.map(t => ({ key: t.Id, text: t.Title }))}
                                 onChanged={this._onDropDownChanged}
                             />
                         </div>
-                        <div className={styles.printIcons + " ms-Grid-col ms-sm6 ms-md4 ms-lg14"}>
+                        <div className={styles.printIcons + " ms-Grid-col ms-sm4 ms-md4 ms-lg4"}>
                             <ReactToPrint
                                 trigger={() => <IconButton iconProps={{ iconName: 'Print' }} title="Print" ariaLabel="Print" />}
                                 content={() => this.componentRef}
                             />
-                            <IconButton iconProps={{ iconName: 'Mail' }} title="Mail" ariaLabel="Mail" />
+                            <div hidden={true}>
+                            <IconButton iconProps={{ iconName: 'Mail' }} title="Mail" ariaLabel="Mail" onClick={this._sendAsEmail} />
                             <IconButton iconProps={{ iconName: 'PDF' }} title="PDF" ariaLabel="PDF" />
                             <IconButton iconProps={{ iconName: 'ExcelLogo' }} title="Export to excel" ariaLabel="ExcelLogo" />
-                            <IconButton iconProps={{ iconName: 'Settings' }} title="Settings" ariaLabel="Settings" onClick={this._setShowPanel(true)} />
+                            </div>
+                            <span hidden={!this.state.isSiteAdmin}><IconButton iconProps={{ iconName: 'Settings' }} title="Settings" ariaLabel="Settings" onClick={this._setShowPanel(true)} /></span>
                         </div>
                     </div>
                     <div className={`${styles.loadingMargin} ms-grid-row`}>
                         <Spinner hidden={this.state.hideTemplateLoading} size={SpinnerSize.large} label={this.state.loadingMessage} ariaLive="assertive" />
                     </div>
-                    <div hidden={!this.state.hideTemplateLoading} className={`${styles.templateContent} ms-grid-row`}>
+                    <div hidden={!this.state.printTemplate} className={`${styles.templateContent} ms-grid-row`}>
                         <PrintTemplateContent itemId={this.props.itemId} template={this.state.printTemplate} ref={el => (this.componentRef = el)} />
                     </div>
                 </div>
@@ -109,6 +119,45 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                     onTemplateUpdated={this._onTemplateUpdated}
                     templates={isArray(templates) ? templates : []} showPanel={this.state.showPanel} setShowPanel={this._setShowPanel} listId={this.props.listId} />
             </DialogContent>
+        </div>;
+    }
+
+
+    private _sendAsEmail() {
+        
+        if (this.state.printTemplate) {
+            const Body = ReactElementToString(this._makeEmailBody());
+            console.log(Body);
+            const email: EmailProperties = {
+                To: ["ramin.ahmadi@live.com"],
+                Body,
+                Subject: "Test"
+            };
+            sp.utility.sendEmail(email).then(email => {
+                alert('Email has been sent!');
+            });
+        }
+        
+    }
+
+    private _makeEmailBody(): any {
+        return <div className={printStyles.Print}>
+            {this.state.printTemplate &&
+                <div className={printStyles.Print}>
+                    <div className={printStyles.printHeader}>
+                        {ReactHtmlParser(this.state.printTemplate.header)}
+                    </div>
+                    <div className={printStyles.printContent}>
+                        {
+                            this.state.printTemplate.content
+                        }
+                    </div>
+                    <div className={printStyles.printFooter}>
+                        {ReactHtmlParser(this.state.printTemplate.footer)}
+                    </div>
+
+                </div>
+            }
         </div>;
     }
 
@@ -122,8 +171,18 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
 
 
     private _onDropDownChanged = (option: IDropdownOption, index?: number) => {
+        const template = this.state.templates[index];
+        const content = this.loadTemplate(template);
+        this.setState({
+            printTemplate: {
+                header: template.Header,
+                footer: template.Footer,
+                content
+            },
+            selectedTemplateIndex: index,
+            hideTemplateLoading: true
+        });
 
-        this.loadTemplate(index);
     }
 
     private _onTemplateUpdated(index: number, template: ITemplateItem) {
@@ -137,9 +196,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
 
     }
 
-    private loadTemplate(index: number) {
-        const template = this.state.templates[index];
-
+    private loadTemplate(template: any): any[] {
         this.setState({
             hideTemplateLoading: false
         });
@@ -208,15 +265,8 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                 }
             }
         }
-        this.setState({
-            printTemplate: {
-                header: template.Header,
-                footer: template.Footer,
-                content
-            },
-            selectedTemplateIndex: index,
-            hideTemplateLoading: true
-        });
+
+        return content;
     }
 
     private async _onTemplateRemoved(id: number, template: ITemplateItem) {
@@ -257,9 +307,10 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
     private async getItemContent() {
         const { listId, itemId } = this.props;
         const itemContent = await this.listService.GetItemById(listId, itemId);
-
+        const isSiteAdmin = await this.listService.IsCurrentUserSiteAdmin();
         this.setState({
-            itemContent
+            itemContent,
+            isSiteAdmin
         });
     }
 }

@@ -25,7 +25,7 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
   @override
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized PrintCommandSet');
-    
+
     return super.onInit().then(_ => {
       sp.setup({
         spfxContext: this.context
@@ -46,17 +46,17 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
   public async onExecute(event: IListViewCommandSetExecuteEventParameters): Promise<void> {
     switch (event.itemId) {
       case 'COMMAND_Print':
-      const component = await import(
-        /* webpackMode: "lazy" */
-        /* webpackChunkName: 'multisharedialog-component' */
-        './components/print-dialog'
-      );
+        const component = await import(
+          /* webpackMode: "lazy" */
+          /* webpackChunkName: 'multisharedialog-component' */
+          './components/print-dialog'
+        );
         const dialog = new component.PrintDialog();
         dialog.webUrl = this.context.pageContext.web.absoluteUrl;
         dialog.listId = this.context.pageContext.list.id.toString();
         dialog.itemId = event.selectedRows[0].getValueByName('ID');
         dialog.title = event.selectedRows[0].getValueByName('Title');
-        dialog.show();        
+        dialog.show();
         break;
       default:
         throw new Error('Unknown command');

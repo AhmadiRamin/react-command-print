@@ -70,6 +70,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             templateColumns: [],
             section: {
                 Title: '',
+                Id: '',
                 BackgroundColor: this._sectionBackgroundColor,
                 FontColor: this._sectionFontColor,
                 Type: 'Section'
@@ -80,7 +81,9 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             frozenColumnCountFromStart: '1',
             frozenColumnCountFromEnd: '0',
             showColorPicker: false,
-            isFontColorPicker: false
+            isFontColorPicker: false,
+            sectionErrorMessage: '',
+            titleErrorMessage: ''
         };
         this.state = {
             ...this._defautState,
@@ -100,11 +103,11 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
         this._headerEditorChange = this._headerEditorChange.bind(this);
         this._footerEditorChange = this._footerEditorChange.bind(this);
         this._skipBlankColumnsToggleChange = this._skipBlankColumnsToggleChange.bind(this);
+        this._saveTemplate = this._saveTemplate.bind(this);
     }
 
     public async componentDidMount() {
         let fields: any[] = await this.listService.GetFieldsbyListId(this.props.listId);
-        console.log(fields);
         this.setState({
             fields
         });
@@ -127,7 +130,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                     onRenderFooterContent={this._onRenderFooterContent}
                 >
                     <div className={`${styles.AddUpdateTemplate} ms-Grid}`}>
-                        <TextField value={Title} label="Name" onChanged={(name) => this.props.onTemplateChanged({ ...this.props.template, Title: name })} />
+                        <TextField value={Title} label="Name" errorMessage={this.state.titleErrorMessage} onChanged={(name) => {this.props.onTemplateChanged({ ...this.props.template, Title: name });this.setState({titleErrorMessage:''});}} />
                         <Label>Columns (Drag fields from the left table to the right one)</Label>
                         <div className="ms-Grid-row">
                             <div className={`ms-Grid-col ms-sm6 ms-md6 ms-lg6`}>
@@ -155,7 +158,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                                                 className={styles.detailsList}
                                                 isHeaderVisible={false}
                                                 layoutMode={DetailsListLayoutMode.justified}
-                                                setKey={'items'}
+                                                setKey={'Id'}
                                                 items={items}
                                                 columns={itemColumns}
                                                 selection={this._itemSelection}
@@ -185,7 +188,7 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                         <Label>Add section</Label>
                         <div className="ms-Grid-row">
                             <div className="ms-Grid-col ms-sm10 ms-md10 ms-lg10">
-                                <TextField onChanged={(value) => this.setState({ section: { ...this.state.section, Title: value } })} value={this.state.section.Title} />
+                                <TextField errorMessage={this.state.sectionErrorMessage} onChanged={(value) => this.setState({ section: { ...this.state.section, Title: value, Id: value },sectionErrorMessage: '' })} value={this.state.section.Title} />
 
                             </div>
                             <div className="ms-Grid-col ms-sm1 ms-md2 ms-lg2">
@@ -322,15 +325,24 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
 
     private _addSection = () => {
 
-        this.setState({
-            section: this._defautState.section
-        });
-        this.props.onTemplateChanged(
-            {
-                ...this.props.template,
-                Columns: this.props.template.Columns.concat(this.state.section)
-            }
-        );
+        if(this.state.section.Title.length<1){
+            this.setState({
+                sectionErrorMessage: 'Please enter a name for your section'
+            });
+        }
+        else{
+            this.setState({
+                section: this._defautState.section,
+                sectionErrorMessage: ''
+            });
+            this.props.onTemplateChanged(
+                {
+                    ...this.props.template,
+                    Columns: this.props.template.Columns.concat(this.state.section)
+                }
+            );
+        }
+        
 
     }
 
@@ -342,10 +354,19 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
     private _onRenderFooterContent = (): JSX.Element => {
         return (
             <div>
-                <PrimaryButton onClick={this.props.onTemplateSaved} style={{ marginRight: '8px' }}>Save</PrimaryButton>
+                <PrimaryButton onClick={this._saveTemplate} style={{ marginRight: '8px' }}>Save</PrimaryButton>
                 <DefaultButton onClick={() => this._onClosePanel()}>Cancel</DefaultButton>
             </div>
         );
+    }
+
+    private _saveTemplate(){
+        if(this.props.template.Title.length<1)
+            this.setState({
+                titleErrorMessage:'Please enter a name for your template'
+            });
+        else
+        this.props.onTemplateSaved();
     }
 
     private _renderRow = (props: IDetailsRowProps, defaultRender?: any) => {
@@ -439,7 +460,6 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
                 }
             },
             onDragStart: (item?: any, itemIndex?: number, selectedItems?: any[], event?: MouseEvent) => {
-
                 _draggedItem = item;
                 _draggedIndex = itemIndex!;
             },
@@ -461,7 +481,6 @@ export default class AddUpdateTemplate extends React.Component<AddUpdateTemplate
             insertIndex = 0;
         }
         items.splice(insertIndex, 0, ...draggedItems);
-        this._fieldSelection.setItems([]);
         this.props.onTemplateChanged({
             ...this.props.template,
             Columns: items

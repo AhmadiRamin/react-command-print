@@ -10,4 +10,5 @@ export default interface IPrintDialogContentState {
     printTemplate: IPrintTemplate;
     itemContent:any;
     selectedTemplateIndex:number;
+    isSiteAdmin:boolean;
 }

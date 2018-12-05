@@ -1,7 +1,7 @@
 import {
     sp
 } from "@pnp/sp";
-import IListField from './list-field';
+import IListField from '../models/list-field';
 import * as strings from 'PrintCommandSetStrings';
 import { Log } from '@microsoft/sp-core-library';
 const LOG_SOURCE: string = 'PrintCommandSet';
@@ -13,6 +13,18 @@ export default class ListService {
         this.buildExclusions();
     }
 
+    public async IsCurrentUserSiteAdmin(): Promise<boolean>{
+        return sp.web.currentUser.get().then(user=>{
+            return user.IsSiteAdmin;
+        }).catch((error: any) => {
+            Log.error(LOG_SOURCE, error);
+            this.safeLog(error);
+            return false;
+        });
+    }
+    /**
+     * GetItemById
+     */
     public async GetItemById(listId: string, itemId: number): Promise<any> {
         return sp.web.lists.getById(listId).items.getById(itemId).fieldValuesAsText.get()
             .then((result: any) => {
@@ -31,6 +43,7 @@ export default class ListService {
             return items;
         }).catch(error => {
             Log.error(LOG_SOURCE, error);
+            this.safeLog(error);
             return error.message;
         });
     }

@@ -10,7 +10,7 @@ import ISettingsPanelState from './settings-panel-state';
 import ISettingsPanelProps from './settings-panel-props';
 import styles from './settings-panel.module.scss';
 import AddUpdateTemplate from '../add-update-template-panel/add-update-template-panel';
-import ITemplateItem from '../../services/template-item';
+import ITemplateItem from '../../models/template-item';
 import { isArray } from '@pnp/common';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
