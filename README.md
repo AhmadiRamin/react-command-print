@@ -6,7 +6,7 @@ This sample shows how you can print list items using different templates, site a
 ![react-command-print](./assets/screenshot.PNG)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-1.7-green.svg)
 
 ## Applies to
 
