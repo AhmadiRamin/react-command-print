@@ -23,8 +23,7 @@ react-command-print | Ramin Ahmadi
 
 Version|Date|Comments
 -------|----|--------
-1.1|August 10, 2018|Update comment
-1.0|June 29, 2018|Initial release
+1.0|Dec 05, 2018|Initial release
 
 ## Disclaimer
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
