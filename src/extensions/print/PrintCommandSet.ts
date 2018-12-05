@@ -26,6 +26,7 @@ export default class PrintCommandSet extends BaseListViewCommandSet<IPrintComman
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized PrintCommandSet');
 
+    // Setup PnP core to use current context
     return super.onInit().then(_ => {
       sp.setup({
         spfxContext: this.context

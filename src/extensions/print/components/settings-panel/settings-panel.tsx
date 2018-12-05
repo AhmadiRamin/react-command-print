@@ -100,6 +100,7 @@ export default class SettingsPanel extends React.Component<ISettingsPanelProps, 
             </div>
         );
     }
+    
     private _showDeleteDialog = (item: any): void => {
         this.setState({
             showDeleteDialog: false,
