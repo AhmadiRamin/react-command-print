@@ -13,17 +13,11 @@ This sample shows how you can print list items using different templates, site a
 * [SharePoint Framework](https://dev.office.com/sharepoint)
 * [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
 
-> Update accordingly as needed.
-
-## Prerequisites
- 
-> Any special pre-requisites?
-
 ## Solution
 
 Solution|Author(s)
 --------|---------
-folder name | Author details
+react-command-print | Ramin Ahmadi
 
 ## Version history
 
@@ -42,23 +36,23 @@ Version|Date|Comments
 - Clone this repository
 - in the command line run:
   - `npm install`
+  - update _serve.json_ pointing to your site collection home page
   - `gulp serve`
 
-> Include any additional steps as needed.
-
 ## Features
-Description of the extension with possible additional details than in short summary.
-This extension illustrates the following concepts:
+This sample illustrates the following concepts on top of the SharePoint Framework:
 
-- topic 1
-- topic 2
-- topic 3
+* Add/Update/Remove print templates
+* Customizable header and footer
+* Ignore blank columns
+* Grouping columns by adding sections
+
 
 ## Debug URL for testing
 Here's a debug URL for testing around this sample. **Updated based on your manifest id for easy testing of the sample**.
 
 ```
-?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&customActions={"7c5a85c1-8b1e-4370-8198-642908faee60":{"location":"ClientSideExtension.ApplicationCustomizer","properties":{"testMessage":"Hello as property!"}}}
+?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&customActions={"83a96197-2c0f-4966-8532-de37b0624ef0":{"location":"ClientSideExtension.ApplicationCustomizer","properties":{"testMessage":"Hello as property!"}}}
 ```
 
 > Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
