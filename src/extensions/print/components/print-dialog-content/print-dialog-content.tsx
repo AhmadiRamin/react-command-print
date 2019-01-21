@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactElementToString from 'react-element-to-string';
 import { initializeIcons } from '@uifabric/icons';
 import ReactToPrint from "react-to-print";
 import styles from './print-dialog.module.scss';
@@ -23,6 +22,7 @@ import ITemplateItem from '../../models/template-item';
 import { style } from 'typestyle';
 import printStyles from '../print-dialog-template-content/print-template-content.module.scss';
 import { sp, EmailProperties } from '@pnp/sp';
+import reactElementToJSXString from 'react-element-to-jsx-string';
 
 const _items: any[] = [];
 export default class PrintDialogContent extends React.Component<IPrintDialogContentProps, IPrintDialogContentState> {
@@ -69,8 +69,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
     }
 
     public render(): JSX.Element {
-        const templates = this.state.templates || [];
-        console.log(`size : ${templates.length}`);
+        const templates = this.state.templates;
         const options = templates.length>0 ? templates.map(t => ({ key: t.Id, text: t.Title })) : [];
         return <div className={styles.PrintDialogContent}>
             <DialogContent
@@ -96,7 +95,7 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                                 trigger={() => <IconButton iconProps={{ iconName: 'Print' }} title="Print" ariaLabel="Print" />}
                                 content={() => this.componentRef}
                             />
-                            <span hidden={true}>
+                            <span hidden={false}>
                                 <IconButton iconProps={{ iconName: 'Mail' }} title="Mail" ariaLabel="Mail" onClick={this._sendAsEmail} />
                                 <IconButton iconProps={{ iconName: 'PDF' }} title="PDF" ariaLabel="PDF" />
                                 <IconButton iconProps={{ iconName: 'ExcelLogo' }} title="Export to excel" ariaLabel="ExcelLogo" />
@@ -125,10 +124,11 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
     private _sendAsEmail = () => {
 
         if (this.state.printTemplate) {
-            const Body = ReactElementToString(this._makeEmailBody());
+            const Body = reactElementToJSXString(this._makeEmailBody());
+            console.log("hello");
             console.log(Body);
             const email: EmailProperties = {
-                To: ["ramin.ahmadi@live.com"],
+                To: ["ramin@raminahmadi.onmicrosoft.com"],
                 Body,
                 Subject: "Test"
             };
@@ -231,8 +231,9 @@ export default class PrintDialogContent extends React.Component<IPrintDialogCont
                     }
                     // Adding the section to the content with customized background and font color
                     const { BackgroundColor, FontColor } = item;
-                    const className = style({ backgroundColor: BackgroundColor, color: FontColor });
-                    content.push(<div className={`${styles.templateSection} ${className}`}><span>{item.Title}</span></div>);
+                    const sectionStyles = { backgroundColor: BackgroundColor, color: FontColor };
+                    const className = style(sectionStyles);
+                    content.push(<div className={`${styles.templateSection} ${className}`} style={sectionStyles}><span>{item.Title}</span></div>);
 
                     // Reset the table array for upcoming fields
                     table = [];
