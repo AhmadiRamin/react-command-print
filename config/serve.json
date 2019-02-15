@@ -4,9 +4,21 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://raminahmadi.sharepoint.com/sites/test/Lists/Test/AllItems.aspx",
+      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
       "customActions": {
-        "83a96197-2c0f-4966-8532-de37b0624ef0": {
+        "6290b0f0-70cf-464e-b115-0eded899a61a": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {
+            "sampleTextOne": "One item is selected in the list",
+            "sampleTextTwo": "This command is always visible."
+          }
+        }
+      }
+    },
+    "myCommand": {
+      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "customActions": {
+        "6290b0f0-70cf-464e-b115-0eded899a61a": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
