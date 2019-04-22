@@ -4,9 +4,9 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://calrisian.sharepoint.com/sites/dev/Lists/test1/AllItems.aspx",
       "customActions": {
-        "6290b0f0-70cf-464e-b115-0eded899a61a": {
+        "83a96197-2c0f-4966-8532-de37b0624ef0": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
@@ -16,9 +16,9 @@
       }
     },
     "myCommand": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://calrisian.sharepoint.com/sites/dev/Lists/test1/AllItems.aspx",
       "customActions": {
-        "6290b0f0-70cf-464e-b115-0eded899a61a": {
+        "83a96197-2c0f-4966-8532-de37b0624ef0": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
           "properties": {
             "sampleTextOne": "One item is selected in the list",
